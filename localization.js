@@ -1,6 +1,6 @@
 //These are for listing various information in the Telegram keyboard in pairs
 
-const materials = require("./JSON/materials.json");
+const localize = require("./JSON/localization.json");
 
 const verticalize = (keys) => {
 	const tempArr = [];
@@ -19,14 +19,14 @@ const verticalize = (keys) => {
 };
 
 // const vertKeyboardArray = verticalize();
-const characterLocal = verticalize(materials.localization.characters);
-const talentLocal = verticalize(materials.localization.talent_materials);
-const swordLocal = verticalize(materials.localization.weapon.sword);
-const claymoreLocal = verticalize(materials.localization.weapon.claymore);
-const polearmLocal = verticalize(materials.localization.weapon.polearm);
-const bowLocal = verticalize(materials.localization.weapon.bow);
-const catalystLocal = verticalize(materials.localization.weapon.catalyst);
-const weaponMatLocal = verticalize(materials.localization.weapon_materials);
+const characterLocal = verticalize(localize.characters);
+const talentLocal = verticalize(localize.talent_materials);
+const swordLocal = verticalize(localize.weapon.sword);
+const claymoreLocal = verticalize(localize.weapon.claymore);
+const polearmLocal = verticalize(localize.weapon.polearm);
+const bowLocal = verticalize(localize.weapon.bow);
+const catalystLocal = verticalize(localize.weapon.catalyst);
+const weaponMatLocal = verticalize(localize.weapon_materials);
 
 exports.characterLocal = characterLocal;
 exports.talentLocal = talentLocal;

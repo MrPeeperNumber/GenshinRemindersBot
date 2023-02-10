@@ -1,0 +1,89 @@
+{
+    "//": "TALENT ASCENSION MATIERAL DAYS",
+    "//": "All items are available on Sunday",
+    "talent_materials": {
+        "freedom": {
+            "days": ["Monday", "Thursday"]
+        },
+        "resistance": {
+            "days": ["Tuesday", "Friday"]
+        },
+        "ballad": {
+            "days": ["Wednesday", "Saturday"]
+        },
+        "prosperity": {
+            "days": ["Monday", "Thursday"]
+        },
+        "diligence": {
+            "days": ["Tuesday", "Friday"]
+        },
+        "gold": {
+            "days": ["Wednesday", "Saturday"]
+        },
+        "transience": {
+            "days": ["Monday", "Thursday"]
+        },
+        "elegance": {
+            "days": ["Tuesday", "Friday"]
+        },
+        "light": {
+            "days": ["Monday", "Thursday"]
+        },
+        "admonition": {
+            "days": ["Monday", "Thursday"]
+        },
+        "ingenuity": {
+            "days": ["Tuesday", "Friday"]
+        },
+        "praxis": {
+            "days": ["Wednesday", "Saturday"]
+        }
+    },   
+
+    "//": "WEAPON ASCENSION MATIERAL DAYS",
+    "//": "All items are available on Sunday",
+    "weapon_materials": {
+        "decarabians": {
+            "days": ["Monday", "Thursday"]
+        },
+        "wolf_tooth": {
+            "days": ["Tuesday", "Friday"]
+        },
+        "gladiator": {
+            "days": ["Wednesday", "Saturday"]
+        },
+        "guyun": {
+            "days": ["Monday", "Thursday"]
+        },
+        "elixir": {
+            "days": ["Tuesday", "Friday"]
+        },
+        "aerosiderite": {
+            "days": ["Wednesday", "Saturday"]
+        },
+        "branch": {
+            "days": ["Monday", "Thursday"]
+        },
+        "oni_mask": {
+            "days": ["Wednesday", "Saturday"]
+        },
+        "narukami": {
+            "days": ["Tuesday", "Friday"]
+        },
+        "talisman": {
+            "days": ["Monday", "Thursday"]
+        },
+        "oasis_garden": {
+            "days": ["Tuesday", "Friday"]
+        },
+        "scorching": {
+            "days": ["Wednesday", "Saturday"]
+        }, 
+        "prism": {
+            "days": ["None", "Dropped by Primal Constructs"]
+        },
+        "shell": {
+            "days": ["None", "Dropped by Consecrated Beasts"]
+        }
+    }
+}

@@ -2,28 +2,19 @@ const CLIENT = require("node-telegram-bot-api");
 const config = require("./JSON/config.json");
 const client = new CLIENT(config.token, { polling: true });
 
-const formatting = require("./localization.js");
 const lists = require("./lists.js");
+const commands = [["/info"], ["/search"], ["/charcters_list"], ["/swords_list"], ["/claymores_list"], ["/polearms_list"], ["/bows_list"], ["/catalysts_list"], ["/talent_materials_list"], ["/weapon_materials_list"]];
 
 //Sends a list of all the commands in a message
 client.onText(/\/start/, (msg) => {
 
-	client.sendMessage(msg.chat.id, 
-		`Welcome! Here's a list of my commands!
-		/info
-		/search
-		/characters_list
-		/swords_list
-		/claymores_list
-		/polearms_list
-		/bows_list
-		/catalysts_list
-		/talent_materials_list
-		/weapon_materials_list`
-	);	
+	client.sendMessage(msg.chat.id, {
+		"reply_markup": {
+			"keyboard": commands
+		}
+	});	
 
 });
-
 //Will send a message with information of some kind? I haven't decided yet
 client.onText(/\/info/, (msg) => {
 	client.sendMessage(msg.chat.id, "Functionatlity has yet to be added!");
@@ -31,8 +22,8 @@ client.onText(/\/info/, (msg) => {
 
 //Will eventually allow users to search for various combinations of materials/the characters and weapons they correspond to
 //and/or characters/weapons and the materials they need
-client.onText(/\/search/, (msg) => {
-	client.sendMessage(msg.chat.id, "Functionality has yet to be added!");
+client.onText(/\/search/, async (msg) => {
+	client.sentMessage(msg.chat.id, "What would you like to search by?");
 });
 
 //Sends a list of all the characters in the game
