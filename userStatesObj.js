@@ -1,23 +1,24 @@
 class States {
 	users = {};
 
-	constructor() {}
+	constructor() {};
+
+	deleteState(id) {
+		delete this.users[id];
+	}
 }
 
 class User {
-	#userID;
 
 	//Constructor
-	constructor(id, state, time) {
-		this.#userID = id;
+	constructor(state, time) {
 		this.currentState = state;
 		this.timeCreated = time;
 	}
 
 	//Getters
-	get getID() 	{ return this.#userID; }
 	get getState() { return this.currentState; }
-	get getTime() 	{ return this.timeCreated; }
+	get getTime() { return this.timeCreated; }
 
 }
 

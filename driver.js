@@ -4,103 +4,290 @@ const client = new CLIENT(config.token, { polling: true });
 
 const {States, User} = require("./userStatesObj.js");
 
+const materials = require("./JSON/materials.json");
+const matDays = require("./JSON/matDays.json");
+const locale = require("./localization.js");
 const lists = require("./lists.js");
-const days = require("./days.js");
-const commands = [["/info"], ["/search"], ["/charcters_list"], ["/swords_list"], ["/claymores_list"], ["/polearms_list"], ["/bows_list"], ["/catalysts_list"], ["/talent_materials_list"], ["/weapon_materials_list"]];
+const commands = [
+	"/start",
+	"/info",
+	"/search",
+	"/characters_list",
+	"/swords_list",
+	"/claymores_list",
+	"/polearms_list",
+	"/bows_list",
+	"/catalysts_list",
+	"/talent_materials_list",
+	"/weapon_materials_list",
+	"/setReminder"
+];
+
+const commandsKeyboard = commands.map(command => [command]);
 
 let states = new States();
+
+client.onText(/.*/, (msg) => {
+	console.log(msg.text.toString());
+	console.log(Object.keys(states.users));
+	console.log(msg.chat.id);
+
+	//test if a user ID has a state
+	if (states.users[msg.chat.id]) {
+		if (msg.text.toLowerCase() ? "cancel" : "/cancel") {
+			delete states.users[msg.chat.id];
+			return;
+		}
+		console.log("state found");
+		switch(states.users[msg.chat.id].currentState) {
+			case "search":
+				console.log("search state found");
+				switch(msg.text) {
+					case "Characters":
+						charactersSearch(msg);
+						break;
+					case "Character Materials":	 
+						characterMatSearch(msg);
+						break;
+					case "Weapons": 
+						weaponsSearch(msg);
+						break;
+					case "Weapon Materials": 
+						weaponMatSearch(msg);
+						break;
+					case "Material":
+						matSearch(msg);
+						break;
+				}
+				break;
+			case "char":
+				characterQuery(msg);
+				break;
+			case "charmat":
+				characterMatQuery(msg);
+				break;
+			case "weapons":
+				weaponsQuery(msg);
+				break;
+			case "weaponmats":
+				weaponMatQuery(msg);
+				break;
+			case "mats":
+				matQuery(msg);
+				break;
+			case "reminder":
+				setReminder(msg);
+				break;
+			default: 
+				client.sendMessage(msg.chat.id, "Something went wrong! Please restart what you were doing.");
+				delete states.users[msg.chat.id];
+				break;
+		}
+	}
+	//if no state is found, test against standard commands
+	else { 
+		switch(msg.text) {
+			case commands[0]:
+				console.log("start case run");
+				start(msg);
+				break;
+			case commands[1]: 
+				info(msg);
+				break;
+			case commands[2]:
+				search(msg); 
+				break;
+			case commands[3]:
+				characterList(msg); 
+				break;
+			case commands[4]: 
+				swordList(msg);
+				break;
+			case commands[5]:
+				claymoreList(msg); 
+				break;
+			case commands[6]:
+				polearmList(msg); 
+				break;
+			case commands[7]: 
+				bowList(msg);
+				break;
+			case commands[8]: 
+				catalystList(msg);
+				break;
+			case commands[9]: 
+				talentMatsList(msg);
+				break;
+			case commands[10]: 
+				weaponMatsList(msg);
+				break;
+			case commands[11]:
+				setReminder(msg);
+				break;
+		}
+	}
+});
+
 //Sends a list of all the commands in a message
-client.onText(/\/start/, (msg) => {
+const start = (msg) => {
 
 	client.sendMessage(msg.chat.id, "Welcome!", {
 		"reply_markup": {
-			"keyboard": commands
+			"keyboard": commandsKeyboard
 		}
 	});	
 
-});
+};
 
 //Will send a message with information of some kind? I haven't decided yet
-client.onText(/\/info/, (msg) => {
+const info = (msg) => {
 	client.sendMessage(msg.chat.id, "Functionatlity has yet to be added!");
-});
+};
 
-/***Functions for users in a "search" state***/
+/***FUNCTIONS FOR USERS IN A "SEARCH" STATE***/
 //Will eventually allow users to search for various combinations of materials/the characters and weapons they correspond to
 //and/or characters/weapons and the materials they need
-client.onText(/\/search/, (msg) => {
-	let user = new userState(msg.chat.id, "search", Date.now());
-	if( msg.chat.id in states.users ) {
-		
+const search = (msg) => {
+	// let user = new User(msg.chat.id, "search", Date.now());
+	if( states.users[msg.chat.id] ) {
+		states.users[msg.chat.id].currentState = "search";
+		console.log(states.users);
 	}
-	
-	states.users[msg.chat.id] = new User();
+	else { 
+		states.users[msg.chat.id] = new User("search", Date.now()); 
+		console.log(states.users);
+	}
 
-	client.sendMessage(msg.chat.id, "What would you like to search by?", {
+	client.sendMessage(msg.chat.id, `What would you like to search by?\nYou can cancel at any point by typing "cancel" or "/cancel"`, {
 		"reply_markup": {
-			"keyboard": ["Characters", "Weapons", "Character Materials", "Weapon Materials"]
+			"keyboard": [["Characters"], ["Character Materials"], ["Weapons"], ["Weapon Materials"]]
 		}
 	});
+};
 
-	client.on("message", `${days.matDay(msg, client)}`);
-});
+const charactersSearch = (msg) => {
+	console.log(lists.characterList);
+	states.users[msg.chat.id].currentState = "char";
+	client.sendMessage(msg.chat.id, `List of Characters`, {
+		"reply_markup": {
+			"keyboard": locale.characterLocal
+		}
+	});
+};
 
-client.onText(/\/Characters/) {
+const characterMatSearch = (msg) => {
+	states.users[msg.chat.id].currentState = "charmat";
+};
 
-}
+const weaponsSearch = (msg) => {
+	states.users[msg.chat.id].currentState = "weapons";
+};
 
-client.onText(/\/Weapons/) {}
+const weaponMatSearch = (msg) => {
+	states.users[msg.chat.id].currentState = "weaponmats";
+};
 
-client.onText(/\/Character Materials/) {}
+const matSearch = (msg) => {
+	states.users[msg.chat.id].currentState = "mats";
+};
+/***END "SEARCH" STATE FUNCTIONS***/
 
-client.onText(/\/Weapon Materials/) {}
-//end "search" state functions
+/***FUNCTIONS FOR USERS WITH ALTERNATE STATES***/
+const characterQuery = (msg) => {
+
+	//find the sanitized name of a character
+	//gets keys from localization, iterates through each key to test message against value
+	//key is the sanitized name of the character
+	const key = Object.keys(locale.localize.characters).find(key => locale.localize.characters[key] === msg.text);
+
+	//if the key is undefined or null, prompt the user again
+	if( key == null ) {
+		client.sendMessage(msg.chat.id, "Please use the list popup to select a character.");
+		charactersSearch(msg);
+	}
+
+	//find the localized name of the material of the searched character using the sanitized character name (key)
+	const mat = Object.values(materials.character).find(mat => materials.character[key] === mat);
+
+	//find the sanitized name of a material
+	const matSan = Object.keys(locale.localize.talent_materials).find(matSan => locale.localize.talent_materials[matSan] === mat);
+
+	//find the days that the material is available
+	const days = Object.values(matDays.talent_materials).find(days => matDays.talent_materials[matSan] === days);
+
+	client.sendMessage(msg.chat.id, `${msg.text}'s talent ascension material is ${mat} which is available on ${days.join(", ")}, and Sunday`);
+};
+
+const characterMatQuery = (msg) => {
+	client.sendMessage(msg.chat.id, "Functionality has yet to be added!");
+};
+
+const weaponsQuery = (msg) => {
+	client.sendMessage(msg.chat.id, "Functionality has yet to be added!");
+};
+
+const weaponMatQuery = (msg) => {
+	client.sendMessage(msg.chat.id, "Functionality has yet to be added!");
+};
+
+const matQuery = (msg) => {
+	client.sendMessage(msg.chat.id, "Functionality has yet to be added!");
+};
+/***END ALTERNATE STATE FUNCTIONS***/
 
 //Sends a list of all the characters in the game
-client.onText(/\/characters_list/, (msg) => {
+const characterList = (msg) => {
 	client.sendMessage(msg.chat.id, `List of All the Characters in Genshin:\n-----------------------------------------------------\n${lists.characterList.join("\n")}`);
-});
+};
 
 //Sends a list of all the swords in the game
-client.onText(/\/swords_list/, (msg) => {
+const swordList = (msg) => {
 	client.sendMessage(msg.chat.id, `List of All the Swords in Genshin:\n-----------------------------------------------------\n${lists.swordList.join("\n")}`);
-});
+};
 
 //Sends a lsit of all the claymores in the game
-client.onText(/\/claymores_list/, (msg) => {
+const claymoreList = (msg) => {
 	client.sendMessage(msg.chat.id, `List of All the Claymores in Genshin:\n-----------------------------------------------------\n${lists.claymoreList.join("\n")}`);
-});
+};
 
 //Sends a list of all the polearms in the game
-client.onText(/\/polearms_list/, (msg) => {
+const polearmList = (msg) => {
 	client.sendMessage(msg.chat.id, `List of All the Polearms in Genshin:\n-----------------------------------------------------\n${lists.polearmList.join("\n")}`);
-});
+};
 
 //Sends a list of all the bows in the game
-client.onText(/\/bows_list/, (msg) => {
+const bowList = (msg) => {
 	client.sendMessage(msg.chat.id, `List of All the Bows in Genshin:\n-----------------------------------------------------\n${lists.bowList.join("\n")}`);
-});
+};
 
 //Sends a list of all the catalysts in the game
-client.onText(/\/catalysts_list/, (msg) => {
+const catalystList = (msg) => {
 	client.sendMessage(msg.chat.id, `List of All the Catalysts in Genshin:\n-----------------------------------------------------\n${lists.catalystList.join("\n")}`);
-});
+};
 
 //Sends a list of talent level up materials in a message, each one having its own line
-client.onText(/\/talent_materials_list/, (msg) => {
+const talentMatsList = (msg) => {
 	client.sendMessage(msg.chat.id, `List of All the Talent Materials in Genshin:\n-----------------------------------------------------\n${lists.talentMatList.join("\n")}`);
-});
+};
 
 //Sends a list of weapon ascencion materials in a message, each one having its own line
-client.onText(/\/weapon_materials_list/, (msg) => {
+const weaponMatsList = (msg) => {
 	client.sendMessage(msg.chat.id, `List of All the Weapon Materials in Genshin:\n-----------------------------------------------------\n${lists.weaponMatList.join(" Set\n")}`);
-});
+};
 
 //Will eventually set up a timer to remind users of ascension material availability on the days that they are available
-client.onText(/\/setReminder/, (msg) => {
-	client.sendMessage(msg.chat.id, "Functionality has yet to be added!");
-});
+const setReminder = (msg) => {
+	if( states.users[msg.chat.id] ) {
+		states.users[msg.chat.id].currentState = "reminder";
+		console.log(states.users);
+	}
+	else { 
+		states.users[msg.chat.id] = new User("reminder", Date.now()); 
+		console.log(states.users);
+	}
 
+	client.sendMessage(msg.chat.id, "Functionality has yet to be added!");
+};
 
 //Functions for Users in a "set_reminder" state
 

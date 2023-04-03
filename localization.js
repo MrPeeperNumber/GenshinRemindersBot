@@ -28,6 +28,7 @@ const bowLocal = verticalize(localize.weapon.bow);
 const catalystLocal = verticalize(localize.weapon.catalyst);
 const weaponMatLocal = verticalize(localize.weapon_materials);
 
+exports.localize = localize;
 exports.characterLocal = characterLocal;
 exports.talentLocal = talentLocal;
 exports.swordLocal = swordLocal;
@@ -36,3 +37,4 @@ exports.polearmLocal = polearmLocal;
 exports.bowLocal = bowLocal;
 exports.catalystLocal = catalystLocal;
 exports.weaponMatLocal = weaponMatLocal;
+exports.verticalize = verticalize;
